@@ -1,0 +1,88 @@
+/* created a table using data from kaggle(myntra products dataset)which contain 12491 rows
+lets see the data*/
+
+select *
+	from mynthra_finds
+	
+	
+/* findout which gender purchase more*/
+
+select count(product_id) as total_count,
+ gender
+ from mynthra_finds
+ group by gender
+ order by total_count desc;
+ 
+ 
+	
+/*by using aggregate function(min,max,avg,sum) and group by	lets find out the minimum, maximum and average
+price for each brand product and the total sales done by each product and by using order by command lets 
+see which brand is top in total sale*/
+
+	
+select productbrand,
+	min(price) as min_price,
+	max(price) as max_price,
+	avg(price) as avg_price,
+	sum(price) as total_sale
+	from mynthra_finds
+	group by  productbrand
+	order by total_sale desc	
+	
+/* limit the above result to top 10 leading brand in total sale*/
+
+	select productbrand,
+	min(price) as min_price,
+	max(price) as max_price,
+	avg(price) as avg_price,
+	sum(price) as total_sale
+	from mynthra_finds
+	group by  productbrand
+	order by total_sale desc
+	limit 10
+
+/* lets analyse the watches sold by myntra using filtering command 'like'*/
+
+select *
+from mynthra_finds
+where lower(productname)
+like '%watch%';
+	
+/* create table using the above query results */
+	
+create table myntra_watch(
+product_id varchar,
+productname varchar,
+productbrand varchar,
+gender varchar,
+price INT,
+numimages INT,
+description varchar,
+primarycolor varchar);
+
+/*import data from csv file into the table  just created using copy statement*/
+
+copy myntra_watch from 'C:\post\myntra_watch302.csv'delimiter ','csv header;
+
+/* lets see the table we just created*/
+
+select*
+from myntra_watch
+
+/*lets findout the most demanded watch brand*/
+
+select productbrand,
+count (product_id) as total_product
+from myntra_watch
+group by productbrand
+order by total_product desc;
+
+/* total sale for each brand*/
+
+select sum(price) as total_sales,
+productbrand
+from myntra_watch
+group by productbrand
+order by total_sales desc;
+
+		
